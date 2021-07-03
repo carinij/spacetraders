@@ -1,10 +1,8 @@
 import React, { useState, MouseEvent, ChangeEvent } from "react";
-import Network from "../../network/Network";
-
-const network = new Network();
 
 type Props = {
   setScreen: (screen: string) => void;
+  gameNetwork: any;
 };
 
 type ErrorMessage = {
@@ -97,7 +95,7 @@ type Cargo = {
   totalVolume: number;
 };
 
-export default function DevMenu({ setScreen }: Props): JSX.Element {
+export default function DevMenu({ setScreen, gameNetwork }: Props): JSX.Element {
   const [resultView, setResultView] = useState(<div />);
   const [inputUsername, setInputUsername] = useState("");
   const [inputToken, setInputToken] = useState("");
@@ -108,14 +106,14 @@ export default function DevMenu({ setScreen }: Props): JSX.Element {
 
   const takeOutLoan = (type: string) => {
     console.log(`Taking out a loan of type ${type}`);
-    network.performUserAction("loans", { type }, (result: Result) => {
+    gameNetwork.performUserAction("loans", { type }, (result: Result) => {
       console.log(result);
     });
   };
 
   const purchaseShip = (type: string, location: string) => {
     console.log(`Taking out a loan of type ${type} + at location ${location}`);
-    network.performUserAction("ships", { location, type }, (result: Result) => {
+    gameNetwork.performUserAction("ships", { location, type }, (result: Result) => {
       console.log(result);
     });
   };
@@ -145,7 +143,7 @@ export default function DevMenu({ setScreen }: Props): JSX.Element {
     switch (((event.target as Node).parentNode as Element).id) {
       case "create-account":
         console.log("Creating account.");
-        network.createUser(inputUsername, (result: Result) => {
+        gameNetwork.createUser(inputUsername, (result: Result) => {
           console.log(result);
           if (result.error) {
             displayErrorMessage(result.error.message);
@@ -165,7 +163,7 @@ export default function DevMenu({ setScreen }: Props): JSX.Element {
         break;
       case "login":
         console.log("Logging in.");
-        network.authenticateUser(
+        gameNetwork.authenticateUser(
           inputUsername,
           inputToken,
           (errorMessage: string) => {
@@ -185,7 +183,7 @@ export default function DevMenu({ setScreen }: Props): JSX.Element {
         console.log("Logging in test account.");
         const testUsername = "superawesometestaccount";
         const testToken = "c525bf3e-51ba-4195-a3f9-643b8789173f";
-        network.authenticateUser(
+        gameNetwork.authenticateUser(
           testUsername,
           testToken,
           (errorMessage: string) => {
@@ -205,14 +203,14 @@ export default function DevMenu({ setScreen }: Props): JSX.Element {
       case "randologin": {
         console.log("Logging in random account.");
         const randoUsername = `Rando${Math.floor(Math.random() * 1000000)}`;
-        network.createUser(randoUsername, (result: Result) => {
+        gameNetwork.createUser(randoUsername, (result: Result) => {
           console.log(result);
           if (result.error) {
             displayErrorMessage(result.error.message);
           } else if (result.user) {
             // TODO: Added this to avoid the error, but I'm not sure this was this was the right way
             // to handle this for the case of an empty token being returned...
-            network.authenticateUser(
+            gameNetwork.authenticateUser(
               randoUsername,
               result.token ? result.token : "",
               (errorMessage: string) => {
@@ -233,7 +231,7 @@ export default function DevMenu({ setScreen }: Props): JSX.Element {
       }
       case "get-user-info":
         console.log("Getting user info.");
-        network.getUserStatus((result: Result) => {
+        gameNetwork.getUserStatus((result: Result) => {
           console.log(result);
           if (result.error) {
             displayErrorMessage(result.error.message);
@@ -271,7 +269,7 @@ export default function DevMenu({ setScreen }: Props): JSX.Element {
         break;
       case "get-available-loans":
         console.log("Getting available loans.");
-        network.getGameInfo("loans", (result: Result) => {
+        gameNetwork.getGameInfo("loans", (result: Result) => {
           console.log(result);
           if (result.error) {
             displayErrorMessage(result.error.message);
@@ -305,7 +303,7 @@ export default function DevMenu({ setScreen }: Props): JSX.Element {
         break;
       case "get-available-ships":
         console.log("Getting available ships.");
-        network.getGameInfo("ships", (result: Result) => {
+        gameNetwork.getGameInfo("ships", (result: Result) => {
           console.log(result);
           if (result.error) {
             displayErrorMessage(result.error.message);
@@ -346,7 +344,7 @@ export default function DevMenu({ setScreen }: Props): JSX.Element {
         break;
       case "get-all-systems":
         console.log("Getting all systems.");
-        network.getGameInfo("systems", (result: Result) => {
+        gameNetwork.getGameInfo("systems", (result: Result) => {
           console.log(result);
           if (result.error) {
             displayErrorMessage(result.error.message);

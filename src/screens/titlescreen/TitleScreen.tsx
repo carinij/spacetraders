@@ -8,9 +8,10 @@ type Props = {
   setScreen: (screen: string) => void;
   setLoggedIn: (loggedIn: boolean) => void;
   loggedIn: boolean;
+  gameNetwork: object;
 }
 
-export default function TitlePagePanel ({ setScreen, setLoggedIn, loggedIn } : Props): JSX.Element {
+export default function TitlePagePanel ({ setScreen, setLoggedIn, loggedIn, gameNetwork } : Props): JSX.Element {
 
   let titleMenuDisplay = <div></div>;
 
